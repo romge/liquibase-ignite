@@ -1,20 +1,7 @@
-# 🔥 liquibase-extension-example
+liquibase-cassandra
 
-Example repository for creating your own Liquibase CORE and Liquibase PRO extensions.  
-This repository uses the reusable workflows from the [liquibase/build-logic](https://github.com/liquibase/build-logic) repository. 🚀
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build and Test Extension](https://github.com/liquibase/liquibase-cassandra/actions/workflows/test.yml/badge.svg)](https://github.com/liquibase/liquibase-cassandra/actions/workflows/test.yml)
+===================
 
-🔐 **Secrets** required for extensions using this template are documented in our infrastructure repository [here](https://github.com/liquibase/liquibase-infrastructure/blob/master/github/README.md).  
-
----
-
-### 🛠️ Modify `test.yml` as per your requirement
-
-✅ **OSS-Extension**: use the reusable workflow block below:
-```yaml
-uses: liquibase/build-logic/.github/workflows/os-extension-test.yml@v0.5.3
-```
-
-✅ **PRO-Extension** : use the below reusable workflow block :  
-```yaml
-uses: liquibase/build-logic/.github/workflows/pro-extension-test.yml@v0.5.5
-```
+Liquibase extension for Cassandra Support.

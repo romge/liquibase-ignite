@@ -6,6 +6,10 @@ on:
   schedule:
     - cron: '0 7 * * 1-5'
 
+permissions:
+  pull-requests: write
+  id-token: write
+
 jobs:
   nightly-build:
     uses: liquibase/build-logic/.github/workflows/os-extension-test.yml@main
