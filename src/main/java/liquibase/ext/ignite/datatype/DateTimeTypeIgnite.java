@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 @DataTypeInfo(name = "datetime", minParameters = 0, maxParameters = 1,
     aliases = {"java.sql.Types.DATETIME", "java.util.Date", "smalldatetime", "datetime2"},
     priority = LiquibaseDataType.PRIORITY_DEFAULT + 1)
-public class IgniteDateTimeType extends DateTimeType {
+public class DateTimeTypeIgnite extends DateTimeType {
 
   @Override
   public boolean supports(Database database) {
