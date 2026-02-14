@@ -1,0 +1,9 @@
+inputFormat: xml
+context: testContext
+
+databasesUnderTest:
+  - name: ignite
+    version: 3
+    url: jdbc:ignite:thin://localhost/lbcat?username=lbuser&password=LiquibasePass1
+    username: lbuser
+    password: LiquibasePass1

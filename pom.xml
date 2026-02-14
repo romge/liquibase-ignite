@@ -11,7 +11,7 @@
 
     <groupId>org.liquibase.ext</groupId>
     <artifactId>liquibase-ignite</artifactId>
-    <version>0.0.1</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Liquibase Extension for Apache Ignite</name>
@@ -38,31 +38,46 @@
     </scm>
 
     <properties>
+        <liquibase.version>5.0.1</liquibase.version>
         <ignite.version>3.1.0</ignite.version>
+        <maven.compiler.release>17</maven.compiler.release>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.ignite</groupId>
-            <artifactId>ignite-runner</artifactId>
-            <version>${ignite.version}</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>org.apache.ignite</groupId>
             <artifactId>ignite-jdbc</artifactId>
             <version>${ignite.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
-            <version>1.7.36</version>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite-engine</artifactId>
+            <version>${junit-platform.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!--
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-commercial</artifactId>
+            <version>4.32.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>net.snowflake</groupId>
+            <artifactId>snowflake-jdbc</artifactId>
+            <version>4.0.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.skyscreamer</groupId>
+            <artifactId>jsonassert</artifactId>
+            <version>${jsonassert.version}</version>
+            <scope>test</scope>
+        </dependency><-->
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.36</version>
+            <version>${slf4j.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -73,6 +88,15 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
+                    <includes>
+                        <include>**/*Test</include>
+                        <include>**/*Tests</include>
+                        <include>**/*Spec</include>
+                        <include>**/*Suite</include>
+                    </includes>
+                    <classpathDependencyExcludes>
+                        <exclude>org.liquibase.ext:liquibase-disable-analytics</exclude>
+                    </classpathDependencyExcludes>
                     <argLine>
                         --add-opens java.base/java.lang=ALL-UNNAMED
                         --add-opens java.base/java.lang.invoke=ALL-UNNAMED

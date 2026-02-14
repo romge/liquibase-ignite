@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  ignite:
+    image: docker.io/apacheignite/ignite:3.1.0
+    ports:
+      - 10800:10800
+      - 10300:10300
+      - 11211:11211
+      - 47100:47100
+    restart: always
+    volumes:
+      - "./ignite-init.sh:/docker-entrypoint-initdb.d/ignite-init.sh"
+      - "./ignite-init.sql:/docker-entrypoint-initdb.d/ignite-init.sql"
+      - "./ignite-config.conf:/docker-entrypoint-initdb.d/ignite-config.conf"
+    entrypoint: /docker-entrypoint-initdb.d/ignite-init.sh

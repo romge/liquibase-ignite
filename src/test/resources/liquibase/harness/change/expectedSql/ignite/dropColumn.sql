@@ -1,0 +1,3 @@
+ALTER TABLE LBCAT.posts ADD varcharColumn VARCHAR(25)
+UPDATE LBCAT.posts SET varcharColumn = 'INITIAL_VALUE'
+ALTER TABLE LBCAT.posts DROP COLUMN varcharColumn

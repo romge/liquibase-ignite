@@ -1,1 +1,1 @@
-liquibase.ext.ignite.datatype.IgniteDateTimeType
+liquibase.ext.ignite.datatype.DateTimeTypeIgnite

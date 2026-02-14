@@ -1,42 +1,32 @@
 package liquibase.ext.ignite.database;
 
-import java.util.Set;
+import java.util.List;
 import liquibase.CatalogAndSchema;
+import liquibase.Scope;
 import liquibase.database.AbstractJdbcDatabase;
 import liquibase.database.DatabaseConnection;
 import liquibase.exception.DatabaseException;
+import liquibase.structure.DatabaseObject;
+import liquibase.structure.core.Catalog;
+import liquibase.structure.core.Column;
+import liquibase.structure.core.Index;
+import liquibase.structure.core.Schema;
+import liquibase.structure.core.Table;
 
 public class IgniteDatabase extends AbstractJdbcDatabase {
 
   public static final String PRODUCT_NAME = "Apache Ignite";
-  public static final String SHORT_PRODUCT_NAME = "ignite";
+  public static final String SHORT_PRODUCT_NAME = "Ignite";
   public static final int DEFAULT_PORT = 10800;
   public static final String DEFAULT_DRIVER = "org.apache.ignite.jdbc.IgniteJdbcDriver";
-
-  private final Set<String> systemViews = Set.of(
-      "COMPUTE_TASKS",
-      "GLOBAL_PARTITION_STATES",
-      "GLOBAL_ZONE_PARTITION_STATES",
-      "INDEXES",
-      "INDEX_COLUMNS",
-      "LOCAL_ZONE_PARTITION_STATES",
-      "LOCKS",
-      "LOCAL_PARTITION_STATES",
-      "SCHEMAS",
-      "SQL_QUERIES",
-      "SQL_CACHED_QUERY_PLANS",
-      "SYSTEM_VIEWS",
-      "SYSTEM_VIEW_COLUMNS",
-      "TABLES",
-      "TABLE_COLUMNS",
-      "TRANSACTIONS",
-      "ZONES",
-      "ZONE_STORAGE_PROFILES"
+  private static final List<Class<? extends DatabaseObject>> supportedClasses = List.of(
+      Catalog.class, Schema.class, Table.class, Column.class, Index.class
   );
 
   public IgniteDatabase() {
-    defaultSchemaName = "PUBLIC";
+    defaultCatalogName = "IGNITE";
     currentDateTimeFunction = "CURRENT_TIMESTAMP";
+    unquotedObjectsAreUppercased = true;
   }
 
   @Override
@@ -91,13 +81,64 @@ public class IgniteDatabase extends AbstractJdbcDatabase {
   }
 
   @Override
-  public boolean isSystemView(CatalogAndSchema schema, String viewName) {
-    return getSystemSchema().equalsIgnoreCase(schema.customize(this).getSchemaName())
-        || systemViews.contains(viewName);
+  public boolean isSystemObject(final DatabaseObject example) {
+    return example != null && example.getSchema() != null && example.getSchema().getName() != null
+        && getSystemSchema().equalsIgnoreCase(example.getSchema().getName());
   }
 
   @Override
-  protected Set<String> getSystemViews() {
-    return systemViews;
+  public boolean isSystemView(CatalogAndSchema schema, String viewName) {
+    return getSystemSchema().equalsIgnoreCase(schema.customize(this).getSchemaName());
+  }
+
+  @Override
+  public boolean supportsSequences() {
+    return false;
+  }
+
+  @Override
+  public boolean supportsAutoIncrement() {
+    return false;
+  }
+
+  @Override
+  public void setConnection(DatabaseConnection conn) {
+    super.setConnection(conn);
+  }
+
+  @Override
+  protected String getConnectionSchemaName() {
+    var connection = getConnection();
+    if (connection == null) {
+      return null;
+    }
+
+    try {
+      return connection.getUnderlyingConnection().getSchema();
+    } catch (Exception e) {
+      Scope.getCurrentScope().getLog(getClass()).info("Error getting default schema", e);
+    }
+    return null;
+  }
+
+  @Override
+  public String getDateLiteral(final String isoDate) {
+    if (isDateOnly(isoDate) || isTimeOnly(isoDate)) {
+      return "DATE'" + isoDate + "'";
+    } else if (isDateTime(isoDate)) {
+      return "'" + isoDate.replace('T', ' ') + "'";
+    } else {
+      return "BAD_DATE_FORMAT:" + isoDate;
+    }
+  }
+
+  @Override
+  public boolean supports(Class<? extends DatabaseObject> cls) {
+    return supportedClasses.stream().anyMatch(c -> c.isAssignableFrom(cls));
+  }
+
+  @Override
+  protected String getConnectionCatalogName() {
+    return "IGNITE";
   }
 }
