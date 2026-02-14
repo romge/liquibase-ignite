@@ -8,6 +8,11 @@ jobs:
     name: Liquibase Test Harness
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: read
+      actions: read
+      checks: write
+
     strategy:
       matrix:
         liquibase-support-level: [Contributed] # Foundational, Advanced
